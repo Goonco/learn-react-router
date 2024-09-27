@@ -1,10 +1,10 @@
-import {Form, Link, NavLink, Outlet, redirect, useLoaderData} from "react-router-dom";
+import {Form, NavLink, Outlet, redirect, useLoaderData, useNavigation} from "react-router-dom";
 
 import {createContact, getContacts} from "../contacts";
 
 export async function loader() {
     const contacts = await getContacts();
-    return { contacts };
+    return {contacts};
 }
 
 export async function action() {
@@ -14,9 +14,12 @@ export async function action() {
 
 export default function Root() {
     const {contacts} = useLoaderData()
+    const navigation = useNavigation()
+
     return (
         <>
-            <div id="sidebar">
+            <div id="sidebar"
+            >
                 <h1>React Router Contacts</h1>
                 <div>
                     <form id="search-form" role="search">
@@ -48,7 +51,7 @@ export default function Root() {
                                 <li key={contact.id}>
                                     <NavLink
                                         to={`contacts/${contact.id}`}
-                                        className={({ isActive, isPending }) =>
+                                        className={({isActive, isPending}) =>
                                             isActive
                                                 ? "active"
                                                 : isPending
@@ -56,14 +59,14 @@ export default function Root() {
                                                     : ""
                                         }
                                     >
-                                            {contact.first || contact.last ? (
-                                                <>
-                                                    {contact.first} {contact.last}
-                                                </>
-                                            ) : (
-                                                <i>No Name</i>
-                                            )}{" "}
-                                            {contact.favorite && <span>★</span>}
+                                        {contact.first || contact.last ? (
+                                            <>
+                                                {contact.first} {contact.last}
+                                            </>
+                                        ) : (
+                                            <i>No Name</i>
+                                        )}{" "}
+                                        {contact.favorite && <span>★</span>}
                                     </NavLink>
                                 </li>
                             ))}
@@ -76,7 +79,9 @@ export default function Root() {
                 </nav>
 
             </div>
-            <div id="detail"><Outlet/></div>
+            <div id="detail"
+                 className={navigation.state === "loading" ? "loading" : ""}
+            ><Outlet/></div>
         </>
     );
 }
