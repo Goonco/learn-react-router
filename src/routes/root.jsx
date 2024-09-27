@@ -46,7 +46,10 @@ export default function Root() {
                             defaultValue={q}
                             className={searching ? "loading" : ""}
                             onChange={(event) => {
-                                submit(event.currentTarget.form);
+                                const isFirstSearch = q == null;
+                                submit(event.currentTarget.form, {
+                                    replace: !isFirstSearch,
+                                });
                             }}
                         />
                         <div
